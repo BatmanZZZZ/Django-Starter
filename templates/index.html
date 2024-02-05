@@ -1,0 +1,510 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forum</title>
+  <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'Blog/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="flex flex-no-wrap">
+    <div class="min-h-screen border-r border-gray-100 sticky top-0 h-full bg-gray-100 z-20">
+      <div class="relative top-0 min-h-screen bottom-0 flex items-center flex-col p-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2 cursor-pointer mt-4"
+          width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#718096" fill="none"
+          stroke-linecap="round" stroke-linejoin="round" onclick="sidebarHandler()">
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+        <ul aria-orientation="vertical" class="rounded py-8">
+          <li
+            class="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-1 hover:text-blue-700 focus:text-blue-700 focus:outline-none">
+            <a href="index.html">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-grid" width="20" height="20"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z"></path>
+                <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+                <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+                <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+                <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+              </svg>
+            </a>
+          </li>
+          <li
+            class="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-6 py-1 hover:text-blue-700 focus:text-blue-700 focus:outline-none flex items-center">
+            <a href="./login.html">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="absolute top-0 min-h-screen ml-10 flex items-start flex-col bg-gray-100 transition duration-150 ease-in-out hidden"
+        id="mobile-nav">
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="opacity-0 pointer-events-none icon icon-tabler icon-tabler-menu-2 cursor-pointer mt-8" width="20"
+          height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#718096" fill="none" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+        <ul aria-orientation="vertical" class="rounded py-8 pl-2 pr-32 whitespace-no-wrap">
+        
+          <li
+            class="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-blue-700 focus:text-blue-700 focus:outline-none">
+            <form action="{% url 'home' %}" method="GET">
+              {% csrf_token %}
+              <button>
+                Home
+              </button>
+            </form>
+          </li>
+        
+          <li
+            class="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-6 py-2 hover:text-blue-700 focus:text-blue-700 focus:outline-none flex items-center">
+        
+            <form action="{% url 'login' %}" method="GET">
+              {% csrf_token %}
+              <button>
+                Login / Register
+              </button>
+            </form>
+        
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+
+    <div class="w-full">
+      <div class="w-full px-6">
+        <div class="lg:flex flex-wrap">
+          <div class="py-10 lg:w-2/3 w-full md:pr-6 md:border-r border-gray-300">
+            <div>
+              <h1 class="text-3xl text-gray-900 font-bold mb-10">Forum</h1>
+              <form action="{% url 'search_thread' %}" method="GET"
+              >
+                {% csrf_token %}
+              <div class="flex flex-col md:flex-row md:items-center">
+                <div class="w-full md:w-1/2 pb-3 md:pb-0 md:pr-3 md:border-r border-gray-300">
+                  <h3 class="text-xl text-gray-900 mb-2">
+                    Search for threads & posts
+                  </h3>
+                  <div class="flex flex-col">
+                    <label for="search" name="search"
+                      class="hidden text-gray-800 text-sm font-bold leading-tight tracking-normal mb-2"></label>
+                    <div class="relative w-full mb-2">
+                      <div class="absolute text-gray-600 flex items-center pl-4 h-full cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="18"
+                          height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" />
+                          <circle cx="10" cy="10" r="7" />
+                          <line x1="21" y1="21" x2="15" y2="15" />
+                        </svg>
+                      </div>
+                      <input id="search" name ="search" required
+                        class="text-gray-600 focus:outline-none focus:border focus:border-blue-700 font-normal w-full h-10 flex items-center pl-12 text-sm border-gray-300 rounded border bg-gray-100"
+                        placeholder="Search" />
+                    </div>
+                  </div>
+                  <div class="flex flex-col md:flex-row md:items-center">
+                    <div class="w-full md:w-1/2">
+                      <div class="relative w-full z-10">
+                        <div class="absolute z-0 inset-0 m-auto mr-2 xl:mr-4 z-0 w-5 h-5">
+                          <svg xmlns="http://www.w3.org/2000/svg"
+                            class="icon cursor-pointer icon-tabler icon-tabler-chevron-down" width="20" height="20"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="#a0aec0" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z"></path>
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </div>
+                        <select aria-label="Selected tab"
+                          class="relative z-10 cursor-pointer focus:outline-none focus:border-gray-800 focus:shadow-outline-gray text-sm form-select block w-full py-2 px-2 xl:px-3 border border-gray-300 rounded text-gray-600 appearance-none bg-transparent">
+                          <option class="text-sm text-gray-600">
+                            Option 1
+                          </option>
+                          <option class="text-sm text-gray-600">
+                            Option 2
+                          </option>
+                          <option selected="" class="text-sm text-gray-600">
+                            Select category
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="w-full md:w-1/2 md:flex justify-end">
+                      
+                        <button type="submit"
+                          class="bg-gray-800 text-sm  text-white rounded hover:bg-gray-600 transition duration-150 ease-in-out py-2 px-6 sm:mt-0 mt-4">
+                          Search
+                        </button>
+                      
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </form>
+
+                <div class="w-full md:w-1/2 pt-3 md:pt-0 md:pl-3">
+                  <h3 class="text-xl text-gray-900 mb-2">Post a thread</h3>
+                  <div class="flex flex-col">
+                    <label for="q_search"
+                      class="hidden text-gray-800 text-sm font-bold leading-tight tracking-normal mb-2"></label>
+                    <div class="relative w-full mb-2">
+                      <input id="q_search"
+                        class="text-gray-600 focus:outline-none focus:border focus:border-blue-700 bg-gray-100 font-normal w-full h-10 flex items-center pl-4 text-sm border-gray-300 rounded border"
+                        placeholder="Type a title" />
+                    </div>
+                  </div>
+                  <div class="flex flex-col md:flex-row md:items-center">
+                    <div class="w-full md:w-1/2"></div>
+                    <div class="w-full md:w-1/2 md:flex md:mb-0 mb-4 justify-end">
+                      <form action="{% url 'new_thread' %}" method="GET">
+                        {% csrf_token %}
+                        <button type="submit"
+                        class="bg-blue-700 text-sm text-white rounded hover:bg-blue-600 transition duration-150 ease-in-out py-2 px-6 sm:mt-0 mt-4"
+                        >
+                        Continue
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-16 sm:flex items-center">
+                <button
+                  class="md:mr-16 bg-blue-100 text-sm text-blue-500 rounded hover:bg-blue-200 transition duration-150 ease-in-out py-2 px-6">
+                  Recent threads
+                </button>
+                <p class="text-sm text-gray-600 sm:mt-0 mt-8 sm:px-0 px-2">
+                  Unanswered Threads
+                </p>
+              </div>
+              <hr class="mt-6 mb-8 border-t border-gray-300" />
+
+
+            {% if threads %}
+              {% for thread in threads %}
+              <div>
+                <a href="./thread.html">
+                  <div class="md:flex items-center">
+                    <div class="w-10 h-10 rounded-full flex-shrink-0">
+                      <h4 class="w-full h-full object-cover object-center flex-shrink-0">
+                        @
+                      </h4>
+                    </div>
+                    <div class="md:ml-2 w-full">
+                      <div class="md:flex items-center justify-between mt-4 md:mt-0 w-full">
+                        <h5 class="text-gray-800 text-base">
+                          {{ thread.title }}
+                        </h5>
+                        <div class=" text-gray-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bookmark" width="20" height="20"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" />
+                            <path d="M9 4h6a2 2 0 0 1 2 2v14l-5-3l-5 3v-14a2 2 0 0 1 2 -2" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="md:mt-1 mt-3 flex  items-center text-gray-600">
+                        <p class="text-gray-600 text-xs">
+                          by <span class="text-blue-500">{{ thread.user.username }}</span>
+                        </p>
+                        <div class="w-1 h-1 bg-gray-500 rounded-full mx-2"></div>
+                        <p class="text-gray-600 text-xs">{{ thread.createdAt }}</p>
+                        <div class="w-1 h-1 bg-gray-500 rounded-full mx-2"></div>
+                        <p class="ml-2 text-gray-600 text-xs">
+                          In: <span class="text-blue-500">Marketing</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 text-gray-600 text-sm">
+                    {{ thread.body }}<span class="color-blue text-sm">more</span>
+                  </p>
+                  <div class="mt-3 md:flex items-center text-gray-600">
+                    <div class="flex items-center md:my-0 my-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message" width="24" height="24"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+                        <line x1="8" y1="9" x2="16" y2="9" />
+                        <line x1="8" y1="13" x2="14" y2="13" />
+                      </svg>
+                      <p class="ml-2 text-gray-600 text-xs ">20 comments</p>
+                    </div>
+                    <div class="flex items-center">
+                      <div class="w-1 h-1 bg-gray-500 rounded-full mx-2 md:mb-0 mb-2"></div>
+                      <p class="ml-2 text-gray-600 text-xs md:mb-0 mb-4">
+                        Last comment by
+                        <span class="text-blue-500">Oliver Jackson</span>
+                      </p>
+                    </div>
+                    <div class="flex items-center">
+                
+                      <div class="w-1 h-1 bg-gray-500 rounded-full mx-2 md:mb-0 mb-2"></div>
+                      <p class="ml-2 text-gray-600 text-xs">
+                        Status: <span class="text-red-500">Unresolved</span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+                <hr class="mt-6 mb-8 border-t border-gray-300" />
+              </div>
+              {% endfor %}
+              {% endif %}
+              
+
+
+
+
+            </div>
+          </div>
+          <!-- <div class="py-10 lg:w-1/3 w-full md:pl-6">
+            <h3 class="mb-10 text-gray-900 font-medium text-xl">
+              Recent threads
+            </h3>
+            <div class="flex items-center mb-6">
+              <div class="w-10 h-10 rounded-full">
+                <img class="w-full h-full object-cover object-center flex-shrink-0 flex"
+                  src="./assets/images/enrolled-student-8.png" alt="" />
+              </div>
+              <p class="text-gray-900 text-sm ml-4">John Doe</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">58 solutions</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">220 appreciations</p>
+            </div>
+            <div class="flex items-center mb-6">
+              <div class="w-10 h-10 rounded-full">
+                <img class="w-full h-full object-cover object-center flex-shrink-0 flex"
+                  src="./assets/images/enrolled-student-8.png" alt="" />
+              </div>
+              <p class="text-gray-900 text-sm ml-4">John Doe</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">58 solutions</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">220 appreciations</p>
+            </div>
+            <div class="flex items-center mb-6">
+              <div class="w-10 h-10 rounded-full">
+                <img class="w-full h-full object-cover object-center flex-shrink-0 flex"
+                  src="./assets/images/enrolled-student-8.png" alt="" />
+              </div>
+              <p class="text-gray-900 text-sm ml-4">John Doe</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">58 solutions</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">220 appreciations</p>
+            </div>
+            <div class="flex items-center mb-6">
+              <div class="w-10 h-10 rounded-full">
+                <img class="w-full h-full object-cover object-center flex-shrink-0 flex"
+                  src="./assets/images/enrolled-student-8.png" alt="" />
+              </div>
+              <p class="text-gray-900 text-sm ml-4">John Doe</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">58 solutions</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">220 appreciations</p>
+            </div>
+            <div class="flex items-center">
+              <div class="w-10 h-10 rounded-full">
+                <img class="w-full h-full object-cover object-center flex-shrink-0 flex"
+                  src="./assets/images/enrolled-student-8.png" alt="" />
+              </div>
+              <p class="text-gray-900 text-sm ml-4">John Doe</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">58 solutions</p>
+              <div class="w-1 h-1 bg-gray-500 rounded-full mx-3"></div>
+
+              <p class="text-gray-600 text-xs">220 appreciations</p>
+            </div>
+            <hr class="border-t border-gray-300 my-8" />
+            <h3 class="mb-6 text-gray-900 font-medium text-xl">
+              Recent posts
+            </h3>
+            <div class="mb-6">
+              <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full flex-shrink-0">
+                  <img class="w-full h-full object-cover object-center flex-shrink-0"
+                    src="./assets/images/enrolled-student-8.png" alt="" />
+                </div>
+                <div class="ml-2 w-full">
+                  <h5 class="text-gray-800 text-sm">John Doe</h5>
+                  <div class="md:flex items-center justify-between w-full">
+                    <p class="text-xs text-gray-600">Manager</p>
+                    <p class="text-xs text-blue-500">
+                      In: Introduction to Consumer Behavior
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-gray-600 text-sm">
+                The psychological factors that determine consumer behavior are
+                pivotal in understanding the course
+              </p>
+              <div class="mt-3 flex items-center text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message" width="24"
+                  height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+                  <line x1="8" y1="9" x2="16" y2="9" />
+                  <line x1="8" y1="13" x2="14" y2="13" />
+                </svg>
+                <p class="ml-2 text-gray-600 text-xs">20 comments</p>
+              </div>
+            </div>
+            <div class="mb-6">
+              <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full flex-shrink-0">
+                  <img class="w-full h-full object-cover object-center flex-shrink-0"
+                    src="./assets/images/enrolled-student-8.png" alt="" />
+                </div>
+                <div class="ml-2 w-full">
+                  <h5 class="text-gray-800 text-sm">John Doe</h5>
+                  <div class="md:flex items-center justify-between w-full">
+                    <p class="text-xs text-gray-600">Manager</p>
+                    <p class="text-xs text-blue-500">
+                      In: Introduction to Consumer Behavior
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-gray-600 text-sm">
+                The psychological factors that determine consumer behavior are
+                pivotal in understanding the course
+              </p>
+              <div class="mt-3 flex items-center text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message" width="24"
+                  height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+                  <line x1="8" y1="9" x2="16" y2="9" />
+                  <line x1="8" y1="13" x2="14" y2="13" />
+                </svg>
+                <p class="ml-2 text-gray-600 text-xs">20 comments</p>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full flex-shrink-0">
+                  <img class="w-full h-full object-cover object-center flex-shrink-0"
+                    src="./assets/images/enrolled-student-8.png" alt="" />
+                </div>
+                <div class="ml-2 w-full">
+                  <h5 class="text-gray-800 text-sm">John Doe</h5>
+                  <div class="md:flex items-center justify-between w-full">
+                    <p class="text-xs text-gray-600">Manager</p>
+                    <p class="text-xs text-blue-500">
+                      In: Introduction to Consumer Behavior
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-gray-600 text-sm">
+                The psychological factors that determine consumer behavior are
+                pivotal in understanding the course
+              </p>
+              <div class="mt-3 flex items-center text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-message" width="24"
+                  height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+                  <line x1="8" y1="9" x2="16" y2="9" />
+                  <line x1="8" y1="13" x2="14" y2="13" />
+                </svg>
+                <p class="ml-2 text-gray-600 text-xs">20 comments</p>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script >
+    // Sidebar script starts here
+      function dropdownHandler(element) {
+        let single = element.getElementsByTagName("ul")[0];
+        single.classList.toggle("hidden");
+      }
+      var sideBar = document.getElementById("mobile-nav");
+      function sidebarHandler() {
+        sideBar.classList.toggle("hidden");
+      }
+      // Sidebar script ends here
+
+      // FAQ script starts here
+      let elements = document.querySelectorAll("[data-menu]");
+      for (let i = 0; i < elements.length; i++) {
+        let main = elements[i];
+        main.addEventListener("click", function () {
+          let element = main.parentElement.parentElement;
+          let andicators = main.querySelectorAll("svg");
+          let child = element.querySelector("p");
+          child.classList.toggle("hidden");
+          if (child.classList.contains("hidden")) {
+            andicators[0].style.display = "block";
+            andicators[1].style.display = "none";
+          } else {
+            andicators[0].style.display = "none";
+            andicators[1].style.display = "block";
+          }
+        });
+      }
+      // FAQ script ends here
+
+      // Tabs script starts here
+      function activeTab(element) {
+        console.log("Element is here", element);
+        let siblings = element.parentNode.querySelectorAll("li");
+        for (let item of siblings) {
+          item.classList.add("text-gray-600");
+          item.classList.add("bg-white");
+          item.classList.remove("bg-gray-100");
+          item.classList.remove("text-blue-500");
+        }
+        element.classList.remove("text-gray-600");
+        element.classList.remove("bg-white");
+        element.classList.add("bg-gray-100");
+        element.classList.add("text-blue-500");
+      }
+      // Tabs script ends here
+
+  </script>
+</body>
+
+</html>
