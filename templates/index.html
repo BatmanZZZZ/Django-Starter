@@ -204,7 +204,7 @@
             {% if threads %}
               {% for thread in threads %}
               <div>
-                <a href="./thread.html">
+                <a href="{% url 'thread_detail' thread.id %}">
                   <div class="md:flex items-center">
                     <div class="w-10 h-10 rounded-full flex-shrink-0">
                       <h4 class="w-full h-full object-cover object-center flex-shrink-0">
