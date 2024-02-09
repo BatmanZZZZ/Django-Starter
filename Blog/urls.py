@@ -1,4 +1,4 @@
-# blogApp/Blog/urls.py
+# forumApp/Forum/urls.py
 from django.urls import path
 from .views import create_post, home, login_view, new_thread, register_view, search_threads, thread_detail
 
